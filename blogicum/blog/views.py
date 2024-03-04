@@ -43,6 +43,17 @@ posts = [
     },
 ]
 
+posts_dict = {}
+
+for post in posts:
+    posts_dict[post['id']] = {
+        'id': post['id'],
+        'location': post['location'],
+        'date': post['date'],
+        'category': post['category'],
+        'text': post['text'],
+    }
+
 
 def index(request):
     template = 'blog/index.html'
@@ -52,14 +63,12 @@ def index(request):
 
 def post_detail(request, post_id):
     template = 'blog/detail.html'
-    for post in posts:
-        if post['id'] == post_id:
-            context = {'post': post}
-            break
+    if posts_dict.get(post_id):
+        context = {'post': posts_dict[post_id]}
     try:
         context
     except NameError:
-        context = {}
+        return render(request, '404.html', status=404)
     return render(request, template, context)
 
 
