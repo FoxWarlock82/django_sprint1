@@ -44,7 +44,7 @@ posts = [
     },
 ]
 
-BLOG_POSTS = {post['id']: post for post in posts}
+POSTS = {post['id']: post for post in posts}
 
 
 def index(request):
@@ -55,10 +55,10 @@ def index(request):
 
 def post_detail(request, post_id):
     template = 'blog/detail.html'
-    if BLOG_POSTS.get(post_id):
-        context = {'post': BLOG_POSTS[post_id]}
+    if POSTS.get(post_id):
+        context = {'post': POSTS[post_id]}
         return render(request, template, context)
-    raise Http404
+    raise Http404('Specified post is missing')
 
 
 def category_posts(request, category_slug):
