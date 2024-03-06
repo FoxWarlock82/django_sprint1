@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render
 
 posts = [
@@ -43,16 +44,7 @@ posts = [
     },
 ]
 
-posts_dict = {}
-
-for post in posts:
-    posts_dict[post['id']] = {
-        'id': post['id'],
-        'location': post['location'],
-        'date': post['date'],
-        'category': post['category'],
-        'text': post['text'],
-    }
+BLOG_POSTS = {post['id']: post for post in posts}
 
 
 def index(request):
@@ -63,13 +55,10 @@ def index(request):
 
 def post_detail(request, post_id):
     template = 'blog/detail.html'
-    if posts_dict.get(post_id):
-        context = {'post': posts_dict[post_id]}
-    try:
-        context
-    except NameError:
-        return render(request, '404.html', status=404)
-    return render(request, template, context)
+    if BLOG_POSTS.get(post_id):
+        context = {'post': BLOG_POSTS[post_id]}
+        return render(request, template, context)
+    raise Http404
 
 
 def category_posts(request, category_slug):
